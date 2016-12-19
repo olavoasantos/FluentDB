@@ -35,11 +35,12 @@ These packages are included out of the box. Check out the links for details on d
 
 1. [Python Inflector](https://github.com/ixmatus/inflector)
 
-#### Example of use
+#### Examples of use
+
+##### Create table
+
 ```python
 from lib.FluentDB.core.FluentDB import FluentDB
-from models.UserModel import UserModel
-import hashlib
 
 if __name__ == '__main__':
     # Create Users table
@@ -51,14 +52,27 @@ if __name__ == '__main__':
     table.string('password')
     DB.create(table)
 
+```
+
+For data manipulation, such as inserting or fetching data, we could use either FluentDB Models or raw FluentDB queries.
+
+##### Inserting data
+
+
+```python
+from lib.FluentDB.core.FluentDB import FluentDB
+from models.UserModel import UserModel
+import hashlib
+
+if __name__ == '__main__':
     # Insert new User
-    # # 1. From UserModel
+    # # 1. Using a FluidDB Model (UserModel)
     User = UserModel()
     User.email = 'john@example.com'
     User.password = 'password123'
     User.save()
 
-    # # 2. From FluentDB
+    # # 2. Using raw FluentDB query
     DB = FluentDB()
     data = {
         'email': 'john@example.com',
@@ -66,14 +80,34 @@ if __name__ == '__main__':
     }
     DB.table('users').insert(data)
 
+```
+
+##### Fetching data
+
+```python
+from lib.FluentDB.core.FluentDB import FluentDB
+from models.UserModel import UserModel
+
+if __name__ == '__main__':
     # Fetch data from database
-    # # 1. From UserModel
+    # # 1. Using a FluentDB Model (UserModel)
+    # # # Fetching all users
     User = UserModel()
     Users = User.all()
     
-    # # 2. From FluentDB
+    # # # Fetching user with ID of 1
+    User = UserModel()
+    User.find(1)
+    
+    # # 2. Using raw FluentDB query
+    # # # Fetching all users
     DB = FluentDB()
     Users = DB.table('users').get()
+    
+    # # # Fetching user with ID of 1
+    DB = FluentDB()
+    User = DB.table('users').where('id', 1).first()
+
 ```
 
 #### To do's
